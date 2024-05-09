@@ -1,10 +1,12 @@
 import express from "express";
-import { config } from "dotenv";
-config();
+import dotenv from "dotenv";
+import { authRouter } from "./routers/auth.router";
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8000;
 
-app.get("/", (req, res) => res.send("Hello yo!!!"));
+app.use(authRouter);
 
 app.listen(port);
