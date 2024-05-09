@@ -3,5 +3,5 @@ import { handleLogin, handleRegister } from "../controllers/auth.controller";
 
 export const authRouter = express();
 
-authRouter.post("/api/register", handleRegister);
-authRouter.post("/api/login", handleLogin);
+authRouter.post("/register", handleRegister);
+authRouter.post("/login", handleLogin);

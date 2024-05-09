@@ -14,10 +14,10 @@ const upload = multer({ storage });
 
 export const eventRouter = express();
 
-eventRouter.post("/api/events", upload.single("coverImage"), handleCreateEvent);
-eventRouter.get("/api/events", handleGetEvents);
-eventRouter.get("/api/events/:id", handleGetSingleEvent);
-eventRouter.patch("/api/events/:id", upload.single("coverImage"), handleUpdateEvent);
-eventRouter.delete("/api/events/:id", handleDeleteEvent);
+eventRouter.post("/events", upload.single("coverImage"), handleCreateEvent);
+eventRouter.get("/events", handleGetEvents);
+eventRouter.get("/events/:id", handleGetSingleEvent);
+eventRouter.patch("/events/:id", upload.single("coverImage"), handleUpdateEvent);
+eventRouter.delete("/events/:id", handleDeleteEvent);
 
-eventRouter.post("/api/events/:id/join", handleJoinEvent);
+eventRouter.post("/events/:id/join", handleJoinEvent);
