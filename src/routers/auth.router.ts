@@ -1,7 +1,7 @@
 import express from "express";
-import { handleRegister } from "../controllers/auth.controller";
+import { handleLogin, handleRegister } from "../controllers/auth.controller";
 
 export const authRouter = express();
 
-authRouter.get("/register", handleRegister);
-authRouter.post("/login", () => {});
+authRouter.post("/api/register", handleRegister);
+authRouter.post("/api/login", handleLogin);

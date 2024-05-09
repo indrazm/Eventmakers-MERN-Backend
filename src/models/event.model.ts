@@ -5,8 +5,8 @@ const eventSchema = new mongoose.Schema({
   description: String,
   coverImage: String,
   location: String,
-  date: Date,
-  time: TimeRanges,
+  date: String,
+  time: String,
   author: { type: mongoose.Types.ObjectId, ref: "User" },
 });
 
