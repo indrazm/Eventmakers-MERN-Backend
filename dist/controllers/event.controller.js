@@ -1,9 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleDeleteEvent = exports.handleUpdateEvent = exports.handleGetSingleEvent = exports.handleGetEvents = exports.handleCreateEvent = void 0;
+exports.handleJoinEvent = exports.handleDeleteEvent = exports.handleUpdateEvent = exports.handleGetSingleEvent = exports.handleGetEvents = exports.handleCreateEvent = void 0;
 const event_model_1 = require("../models/event.model");
+const slugify_1 = __importDefault(require("slugify"));
 async function handleCreateEvent(req, res) {
-    const { title, description, author, date, time } = req.body;
+    const { title, description, location, author, date, time } = req.body;
     const file = req.file;
     if (!title || !description || !author || !file) {
         return res.status(403).json({ message: "Please fill the title, description, author and file fields!" });
@@ -11,7 +15,9 @@ async function handleCreateEvent(req, res) {
     try {
         const newEvent = new event_model_1.Event({
             title,
+            slug: (0, slugify_1.default)(title, { lower: true }),
             description,
+            location,
             author,
             date,
             time,
@@ -21,6 +27,7 @@ async function handleCreateEvent(req, res) {
         return res.status(201).json({ message: "Creating event success!", data: savedEvent });
     }
     catch (error) {
+        console.log(error);
         return res.status(500).json({ message: "Error creating event!" });
     }
 }
@@ -80,3 +87,15 @@ async function handleDeleteEvent(req, res) {
     }
 }
 exports.handleDeleteEvent = handleDeleteEvent;
+async function handleJoinEvent(req, res) {
+    const { id } = req.params;
+    const { name, email, phoneNumber, age, gender } = req.body;
+    try {
+        await event_model_1.Event.findByIdAndUpdate(id, { $push: { participants: { name, email, phoneNumber, age, gender } } }, { new: true });
+        return res.status(200).json({ message: "Participant registered" });
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Something went wrong!" });
+    }
+}
+exports.handleJoinEvent = handleJoinEvent;

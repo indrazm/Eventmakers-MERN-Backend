@@ -17,3 +17,4 @@ app.use(express_1.default.static("public"));
 app.use(auth_router_1.authRouter);
 app.use(event_router_1.eventRouter);
 app.listen(port);
+console.log("API Eventmakers running...");

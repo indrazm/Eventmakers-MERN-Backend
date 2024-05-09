@@ -15,3 +15,4 @@ exports.eventRouter.get("/api/events", event_controller_1.handleGetEvents);
 exports.eventRouter.get("/api/events/:id", event_controller_1.handleGetSingleEvent);
 exports.eventRouter.patch("/api/events/:id", upload.single("coverImage"), event_controller_1.handleUpdateEvent);
 exports.eventRouter.delete("/api/events/:id", event_controller_1.handleDeleteEvent);
+exports.eventRouter.post("/api/events/:id/join", event_controller_1.handleJoinEvent);
