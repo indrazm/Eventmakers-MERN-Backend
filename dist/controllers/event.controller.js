@@ -5,6 +5,9 @@ const event_model_1 = require("../models/event.model");
 async function handleCreateEvent(req, res) {
     const { title, description, author, date, time } = req.body;
     const file = req.file;
+    if (!title || !description || !author || !file) {
+        return res.status(403).json({ message: "Please fill the title, description, author and file fields!" });
+    }
     try {
         const newEvent = new event_model_1.Event({
             title,
@@ -23,21 +26,38 @@ async function handleCreateEvent(req, res) {
 }
 exports.handleCreateEvent = handleCreateEvent;
 async function handleGetEvents(_, res) {
-    const allEvents = await event_model_1.Event.find().populate({ path: "author", select: "firstName lastName email avatarUrl" });
-    return res.status(200).json({ message: "All events fetched successfully", data: allEvents });
+    try {
+        const allEvents = await event_model_1.Event.find().populate({ path: "author", select: "firstName lastName email avatarUrl" });
+        if (allEvents.length === 0)
+            return res.status(200).json({ message: "There is no events", data: allEvents });
+        return res.status(200).json({ message: "All events fetched successfully", data: allEvents });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Something went wrong" });
+    }
 }
 exports.handleGetEvents = handleGetEvents;
 async function handleGetSingleEvent(req, res) {
     const { id } = req.params;
-    const singleEvent = await event_model_1.Event.findById(id).populate({ path: "author", select: "firstName lastName email avatarUrl" });
-    return res.status(200).json({ message: "Single event fetched successfully", data: singleEvent });
+    try {
+        const singleEvent = await event_model_1.Event.findById(id).populate({ path: "author", select: "firstName lastName email avatarUrl" });
+        if (!singleEvent)
+            return res.status(404).json({ message: "Event not found" });
+        return res.status(200).json({ message: "Single event fetched successfully", data: singleEvent });
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Something went wrong" });
+    }
 }
 exports.handleGetSingleEvent = handleGetSingleEvent;
 async function handleUpdateEvent(req, res) {
     const { id } = req.params;
     const { title, description, author, date, time } = req.body;
     try {
-        await event_model_1.Event.findByIdAndUpdate(id, { title, description, author, date, time });
+        const event = await event_model_1.Event.findByIdAndUpdate(id, { title, description, author, date, time });
+        if (!event)
+            return res.status(404).json({ message: "Event not found" });
         return res.status(200).json({ message: `Event ${id} updated successfully` });
     }
     catch (error) {
@@ -48,7 +68,15 @@ async function handleUpdateEvent(req, res) {
 exports.handleUpdateEvent = handleUpdateEvent;
 async function handleDeleteEvent(req, res) {
     const { id } = req.params;
-    await event_model_1.Event.findByIdAndDelete(id);
-    return res.status(200).json({ message: "Event delete success!" });
+    try {
+        const event = await event_model_1.Event.findByIdAndDelete(id);
+        if (!event)
+            return res.status(404).json({ message: "Event might already deleted, not found" });
+        return res.status(200).json({ message: "Event delete success!" });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Something went wrong!" });
+    }
 }
 exports.handleDeleteEvent = handleDeleteEvent;

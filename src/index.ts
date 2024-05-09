@@ -17,3 +17,5 @@ app.use(authRouter);
 app.use(eventRouter);
 
 app.listen(port);
+
+console.log("API Eventmakers running...");
